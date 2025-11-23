@@ -1,0 +1,18 @@
+{
+    "sourceFile": "astro.config.mjs",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763938134212,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763938134212,
+            "name": "Commit-0",
+            "content": "import { defineConfig } from \"astro/config\";\n\nimport cloudflare from \"@astrojs/cloudflare\";\nimport tailwindcss from \"@tailwindcss/vite\";\nimport react from \"@astrojs/react\";\n\n// https://astro.build/config\nexport default defineConfig({\n  base: \"/ca\",\n  build: {\n    assetsPrefix: \"/ca\",\n  },\n  security: {\n    checkOrigin: false,\n  },\n  output: \"server\",\n  adapter: cloudflare({\n    platformProxy: {\n      enabled: true,\n    },\n  }),\n\n  integrations: [react()],\n  vite: {\n    plugins: [tailwindcss()],\n    resolve: {\n      // Use react-dom/server.edge instead of react-dom/server.browser for React 19.\n      // Without this, MessageChannel from node:worker_threads needs to be polyfilled.\n      alias: import.meta.env.PROD\n        ? {\n            \"react-dom/server\": \"react-dom/server.edge\",\n          }\n        : undefined,\n    },\n  },\n});\n"
+        }
+    ]
+}
