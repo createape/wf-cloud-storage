@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 5,
             "patches": [
                 {
                     "date": 1763938134212,
@@ -12,6 +12,22 @@
                 {
                     "date": 1763993647566,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,20 +1,26 @@\n-import { defineConfig } from \"astro/config\";\n+import { defineConfig } from 'astro/config'\n \n-import cloudflare from \"@astrojs/cloudflare\";\n-import tailwindcss from \"@tailwindcss/vite\";\n-import react from \"@astrojs/react\";\n+import cloudflare from '@astrojs/cloudflare'\n+import tailwindcss from '@tailwindcss/vite'\n+import react from '@astrojs/react'\n \n+export const allowedOrigins = [\n+  'https://jscss.webflow.io',\n+  'http://localhost:4321',\n+  'http://localhost:8787',\n+]\n+\n // https://astro.build/config\n export default defineConfig({\n-  base: \"/ca\",\n+  base: '/ca',\n   build: {\n-    assetsPrefix: \"/ca\",\n+    assetsPrefix: '/ca',\n   },\n   security: {\n     checkOrigin: false,\n   },\n-  output: \"server\",\n+  output: 'server',\n   adapter: cloudflare({\n     platformProxy: {\n       enabled: true,\n     },\n@@ -27,10 +33,10 @@\n       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.\n       // Without this, MessageChannel from node:worker_threads needs to be polyfilled.\n       alias: import.meta.env.PROD\n         ? {\n-            \"react-dom/server\": \"react-dom/server.edge\",\n+            'react-dom/server': 'react-dom/server.edge',\n           }\n         : undefined,\n     },\n   },\n-});\n+})\n"
+                },
+                {
+                    "date": 1763994626553,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,14 @@\n \n   integrations: [react()],\n   vite: {\n     plugins: [tailwindcss()],\n+    optimizeDeps: {\n+      exclude: ['@tailwindcss/oxide'],\n+    },\n+    ssr: {\n+      external: ['@tailwindcss/oxide'],\n+    },\n     resolve: {\n       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.\n       // Without this, MessageChannel from node:worker_threads needs to be polyfilled.\n       alias: import.meta.env.PROD\n"
+                },
+                {
+                    "date": 1763994769210,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,14 +24,9 @@\n \n   integrations: [react()],\n   vite: {\n     plugins: [tailwindcss()],\n-    optimizeDeps: {\n-      exclude: ['@tailwindcss/oxide'],\n-    },\n-    ssr: {\n-      external: ['@tailwindcss/oxide'],\n-    },\n+    \n     resolve: {\n       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.\n       // Without this, MessageChannel from node:worker_threads needs to be polyfilled.\n       alias: import.meta.env.PROD\n"
+                },
+                {
+                    "date": 1763994839251,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,8 @@\n import cloudflare from '@astrojs/cloudflare'\n import tailwindcss from '@tailwindcss/vite'\n import react from '@astrojs/react'\n \n-export const allowedOrigins = ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787']\n \n // https://astro.build/config\n export default defineConfig({\n   base: '/ca',\n"
+                },
+                {
+                    "date": 1763994997008,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,10 @@\n import cloudflare from '@astrojs/cloudflare'\n import tailwindcss from '@tailwindcss/vite'\n import react from '@astrojs/react'\n \n+export const allowedOrigins = ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787']\n+\n // https://astro.build/config\n export default defineConfig({\n   base: '/ca',\n   build: {\n"
                 }
             ],
             "date": 1763938134212,

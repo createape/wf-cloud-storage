@@ -1,9 +1,9 @@
-import { allowedOrigins as configAllowedOrigins } from "../../astro.config.mjs";
 
 // API Response utilities for consistent handling across endpoints
 export const API = {
   // Allowed origins sourced from Astro config and cloned for mutation safety
-  allowedOrigins: [...configAllowedOrigins],
+  // allowedOrigins: [...configAllowedOrigins],
+  allowedOrigins: [import.meta.env.ORIGIN, import.meta.env.ORIGIN_DEV, 'http://localhost:4321', 'http://localhost:8787'],
 
   // CORS headers
   corsHeaders: {

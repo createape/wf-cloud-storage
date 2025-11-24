@@ -4,8 +4,6 @@ import cloudflare from '@astrojs/cloudflare'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@astrojs/react'
 
-export const allowedOrigins = ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787']
-
 // https://astro.build/config
 export default defineConfig({
   base: '/ca',

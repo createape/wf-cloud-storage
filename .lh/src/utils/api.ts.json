@@ -3,11 +3,27 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1763993647564,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763994875647,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,11 @@\n-import { allowedOrigins as configAllowedOrigins } from \"../../astro.config.mjs\";\n+// import { allowedOrigins as configAllowedOrigins } from \"../../astro.config.mjs\";\n+export const allowedOrigins = ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787']\n \n // API Response utilities for consistent handling across endpoints\n export const API = {\n   // Allowed origins sourced from Astro config and cloned for mutation safety\n-  allowedOrigins: [...configAllowedOrigins],\n+  // allowedOrigins: [...configAllowedOrigins],\n \n   // CORS headers\n   corsHeaders: {\n     \"Access-Control-Allow-Methods\": \"GET, POST, PUT, DELETE, OPTIONS\",\n"
+                },
+                {
+                    "date": 1763994914457,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,12 @@\n // import { allowedOrigins as configAllowedOrigins } from \"../../astro.config.mjs\";\n-export const allowedOrigins = ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787']\n+// export const allowedOrigins = ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787']\n \n // API Response utilities for consistent handling across endpoints\n export const API = {\n   // Allowed origins sourced from Astro config and cloned for mutation safety\n   // allowedOrigins: [...configAllowedOrigins],\n+  allowedOrigins: ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787'],\n \n   // CORS headers\n   corsHeaders: {\n     \"Access-Control-Allow-Methods\": \"GET, POST, PUT, DELETE, OPTIONS\",\n"
+                },
+                {
+                    "date": 1763995015512,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-// import { allowedOrigins as configAllowedOrigins } from \"../../astro.config.mjs\";\n+import { allowedOrigins as configAllowedOrigins } from \"../../astro.config.mjs\";\n // export const allowedOrigins = ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787']\n \n // API Response utilities for consistent handling across endpoints\n export const API = {\n"
+                },
+                {
+                    "date": 1763997681679,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,10 @@\n-import { allowedOrigins as configAllowedOrigins } from \"../../astro.config.mjs\";\n-// export const allowedOrigins = ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787']\n \n // API Response utilities for consistent handling across endpoints\n export const API = {\n   // Allowed origins sourced from Astro config and cloned for mutation safety\n   // allowedOrigins: [...configAllowedOrigins],\n-  allowedOrigins: ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787'],\n+  allowedOrigins: [import.meta.env.ORIGIN, import.meta.env.ORIGIN_DEV, 'http://localhost:4321', 'http://localhost:8787'],\n \n   // CORS headers\n   corsHeaders: {\n     \"Access-Control-Allow-Methods\": \"GET, POST, PUT, DELETE, OPTIONS\",\n"
                 }
             ],
             "date": 1763993647564,
