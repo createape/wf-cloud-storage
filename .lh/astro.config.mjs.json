@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1763938134212,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763993647566,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,20 +1,26 @@\n-import { defineConfig } from \"astro/config\";\n+import { defineConfig } from 'astro/config'\n \n-import cloudflare from \"@astrojs/cloudflare\";\n-import tailwindcss from \"@tailwindcss/vite\";\n-import react from \"@astrojs/react\";\n+import cloudflare from '@astrojs/cloudflare'\n+import tailwindcss from '@tailwindcss/vite'\n+import react from '@astrojs/react'\n \n+export const allowedOrigins = [\n+  'https://jscss.webflow.io',\n+  'http://localhost:4321',\n+  'http://localhost:8787',\n+]\n+\n // https://astro.build/config\n export default defineConfig({\n-  base: \"/ca\",\n+  base: '/ca',\n   build: {\n-    assetsPrefix: \"/ca\",\n+    assetsPrefix: '/ca',\n   },\n   security: {\n     checkOrigin: false,\n   },\n-  output: \"server\",\n+  output: 'server',\n   adapter: cloudflare({\n     platformProxy: {\n       enabled: true,\n     },\n@@ -27,10 +33,10 @@\n       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.\n       // Without this, MessageChannel from node:worker_threads needs to be polyfilled.\n       alias: import.meta.env.PROD\n         ? {\n-            \"react-dom/server\": \"react-dom/server.edge\",\n+            'react-dom/server': 'react-dom/server.edge',\n           }\n         : undefined,\n     },\n   },\n-});\n+})\n"
                 }
             ],
             "date": 1763938134212,

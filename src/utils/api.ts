@@ -1,7 +1,9 @@
+import { allowedOrigins as configAllowedOrigins } from "../../astro.config.mjs";
+
 // API Response utilities for consistent handling across endpoints
 export const API = {
-  // Allowed origins - always includes localhost for development
-  allowedOrigins: ["https://jscss.webflow.io", "http://localhost:4321", "http://localhost:8787"],
+  // Allowed origins sourced from Astro config and cloned for mutation safety
+  allowedOrigins: [...configAllowedOrigins],
 
   // CORS headers
   corsHeaders: {
