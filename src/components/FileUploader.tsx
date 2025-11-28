@@ -20,6 +20,7 @@ export default function FileUploader() {
   const [reuploadingKey, setReuploadingKey] = useState<string | null>(null)
   const [pendingReuploadKey, setPendingReuploadKey] = useState<string | null>(null)
   const [pendingReuploadMode, setPendingReuploadMode] = useState<'simple' | 'multipart'>('simple')
+  const [deletingKey, setDeletingKey] = useState<string | null>(null)
   const reuploadInputRef = useRef<HTMLInputElement | null>(null)
 
   // File type icons mapping
@@ -306,6 +307,42 @@ export default function FileUploader() {
     if (reuploadInputRef.current) {
       reuploadInputRef.current.value = ''
       reuploadInputRef.current.click()
+    }
+  }
+
+  const deleteFile = async (fileKey: string, fileName: string) => {
+    if (deletingKey) {
+      return
+    }
+
+    const confirmed = window.confirm(`Delete "${fileName}"? This action cannot be undone.`)
+    if (!confirmed) {
+      return
+    }
+
+    setDeletingKey(fileKey)
+
+    try {
+      const response = await fetch(`${import.meta.env.BASE_URL}/api/delete-asset`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ key: fileKey }),
+      })
+
+      if (!response.ok) {
+        const message = await response.text()
+        throw new Error(message || 'Failed to delete file')
+      }
+
+      alert('File deleted successfully!')
+      await loadFiles()
+    } catch (error) {
+      console.error('Delete failed:', error)
+      alert('Failed to delete file. Please try again.')
+    } finally {
+      setDeletingKey(null)
     }
   }
 
@@ -706,6 +743,24 @@ export default function FileUploader() {
                         }}
                       >
                         {reuploadingKey === fileKey ? 'Uploading...' : 'Reupload'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => deleteFile(fileKey, fileName)}
+                        disabled={deletingKey === fileKey}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '4px',
+                          border: '1px solid #fecaca',
+                          backgroundColor: deletingKey === fileKey ? '#fee2e2' : 'white',
+                          color: '#b91c1c',
+                          fontSize: '0.8rem',
+                          fontWeight: '500',
+                          cursor: deletingKey === fileKey ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.3s ease',
+                        }}
+                      >
+                        {deletingKey === fileKey ? 'Deleting...' : 'Delete'}
                       </button>
                     </div>
                   </div>

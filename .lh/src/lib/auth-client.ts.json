@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/lib/auth-client.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764344487120,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764344487120,
+            "name": "Commit-0",
+            "content": "import { createAuthClient } from \"better-auth/react\";\r\n\r\nexport const authClient = createAuthClient({\r\n  baseURL: import.meta.env.PUBLIC_BETTER_AUTH_URL || \"/ca/api/auth\",\r\n});\r\n\r\nexport const { signIn, signOut, useSession } = authClient;\r\n"
+        }
+    ]
+}

@@ -17,6 +17,7 @@
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "astro": "^5.7.0",
+    "better-auth": "^1.4.3",
     "daisyui": "^5.0.50",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

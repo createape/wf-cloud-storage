@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/lib/auth.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1764344487117,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764348647732,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n import { betterAuth } from \"better-auth\";\r\n \r\n+\r\n export const auth = betterAuth({\r\n     // Stateless mode - no database configuration\r\n     // Sessions are stored in cookies only\r\n     socialProviders: {\r\n"
+                }
+            ],
+            "date": 1764344487117,
+            "name": "Commit-0",
+            "content": "import { betterAuth } from \"better-auth\";\r\n\r\nexport const auth = betterAuth({\r\n  // Stateless mode - no database configuration\r\n  // Sessions are stored in cookies only\r\n  socialProviders: {\r\n    google: {\r\n      clientId: import.meta.env.GOOGLE_CLIENT_ID || \"\",\r\n      clientSecret: import.meta.env.GOOGLE_CLIENT_SECRET || \"\",\r\n    },\r\n  },\r\n  secret: import.meta.env.BETTER_AUTH_SECRET,\r\n  basePath: \"/ca/api/auth\",\r\n  trustedOrigins: [\r\n    import.meta.env.ORIGIN || \"http://localhost:4321\",\r\n  ],\r\n});\r\n"
+        }
+    ]
+}

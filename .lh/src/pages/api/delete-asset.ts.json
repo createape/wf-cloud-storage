@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/pages/api/delete-asset.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764348296935,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764348296935,
+            "name": "Commit-0",
+            "content": "import type { APIRoute } from \"astro\";\r\nimport { API } from \"../../utils/api\";\r\n\r\nconst getKeyFromRequest = async (request: Request): Promise<string | null> => {\r\n  const contentType = request.headers.get(\"Content-Type\") || \"\";\r\n\r\n  if (contentType.includes(\"application/json\")) {\r\n    try {\r\n      const payload = await request.json();\r\n      if (payload && typeof payload.key === \"string\" && payload.key.trim().length > 0) {\r\n        return payload.key.trim();\r\n      }\r\n    } catch (error) {\r\n      console.error(\"Failed to parse delete request payload:\", error);\r\n      return null;\r\n    }\r\n  }\r\n\r\n  const url = new URL(request.url);\r\n  const urlKey = url.searchParams.get(\"key\");\r\n  return urlKey && urlKey.trim().length > 0 ? urlKey.trim() : null;\r\n};\r\n\r\nexport const DELETE: APIRoute = async ({ request, locals }) => {\r\n  API.init((locals.runtime as any).env.ORIGIN);\r\n\r\n  if (request.method === \"OPTIONS\") {\r\n    return API.cors(request);\r\n  }\r\n\r\n  try {\r\n    const bucket = locals.runtime.env.CLOUD_FILES;\r\n    if (!bucket) {\r\n      return API.error(\"Cloud storage not configured\", request, 500);\r\n    }\r\n\r\n    const key = await getKeyFromRequest(request);\r\n    if (!key) {\r\n      return API.error(\"Missing key\", request, 400);\r\n    }\r\n\r\n    const exists = await bucket.head(key);\r\n    if (!exists) {\r\n      return API.error(\"File not found\", request, 404);\r\n    }\r\n\r\n    await bucket.delete(key);\r\n\r\n    return API.success({ key, deleted: true }, request);\r\n  } catch (error) {\r\n    console.error(\"Delete asset error:\", error);\r\n    return API.error(\"Failed to delete asset\", request, 500);\r\n  }\r\n};\r\n\r\nexport const OPTIONS: APIRoute = async ({ request, locals }) => {\r\n  API.init((locals.runtime as any).env.ORIGIN);\r\n  return API.cors(request);\r\n};\r\n"
+        }
+    ]
+}
