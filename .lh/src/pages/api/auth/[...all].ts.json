@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1764344487155,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764354459874,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,8 @@\n-import { auth } from \"../../../lib/auth\";\r\n+import { getAuth } from \"../../../lib/auth\";\r\n import type { APIRoute } from \"astro\";\r\n \r\n export const ALL: APIRoute = async (ctx) => {\r\n+    const auth = getAuth(ctx.locals.runtime.env);\r\n+\r\n     return auth.handler(ctx.request);\r\n };\r\n"
                 }
             ],
             "date": 1764344487155,
