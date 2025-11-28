@@ -61,8 +61,8 @@ const createAuth = (rawEnv?: Env): AuthInstance => {
 
     return betterAuth({
         baseURL,
-        // basePath is fine; if baseURL already has /ca/api/auth, Better Auth will let baseURL win
-        basePath: "/ca/api/auth",
+        // basePath is fine; if baseURL already has /api/auth, Better Auth will let baseURL win
+        basePath: "/api/auth",
 
         // Stateless mode - no database configuration (cookies only)
         socialProviders: {
