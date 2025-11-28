@@ -309,6 +309,28 @@ export default function FileUploader() {
     }
   }
 
+  const deleteFile = async (fileKey: string) => {
+    if (!confirm(`Are you sure you want to delete this file?`)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`${import.meta.env.BASE_URL}/api/delete?key=${encodeURIComponent(fileKey)}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete file')
+      }
+
+      setFiles((prev) => prev.filter((f) => (f.key || f.name) !== fileKey))
+      alert('File deleted successfully')
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('Failed to delete file')
+    }
+  }
+
   const uploadFile = uploadMode === 'simple' ? uploadFileSimple : uploadFileMultipart
 
   return (
@@ -706,6 +728,29 @@ export default function FileUploader() {
                         }}
                       >
                         {reuploadingKey === fileKey ? 'Uploading...' : 'Reupload'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => deleteFile(fileKey)}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '4px',
+                          border: '1px solid #ff4d4f',
+                          backgroundColor: 'white',
+                          color: '#ff4d4f',
+                          fontSize: '0.8rem',
+                          fontWeight: '500',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#fff1f0'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'white'
+                        }}
+                      >
+                        Delete
                       </button>
                     </div>
                   </div>

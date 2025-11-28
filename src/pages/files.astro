@@ -199,6 +199,9 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 							<a href="${file.link}" target="_blank" class="btn btn-primary btn-xs">
 								View
 							</a>
+							<button class="btn btn-error btn-xs delete-btn" data-filename="${file.name}">
+								Delete
+							</button>
 						</div>
 					</div>
 				`;
@@ -285,6 +288,52 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 		loadFiles().finally(() => {
 			refreshSpinner.classList.add('hidden');
 		});
+	});
+
+	// Handle file deletion
+	filesList.addEventListener('click', async (e) => {
+		const target = e.target as HTMLElement;
+		const deleteBtn = target.closest('.delete-btn') as HTMLButtonElement;
+		
+		if (deleteBtn) {
+			const filename = deleteBtn.dataset.filename;
+			if (!filename) return;
+			
+			if (!confirm(`Are you sure you want to delete "${filename}"?`)) {
+				return;
+			}
+			
+			const originalText = deleteBtn.innerHTML;
+			deleteBtn.disabled = true;
+			deleteBtn.innerHTML = '<span class="loading loading-spinner loading-xs"></span>';
+			
+			try {
+				const response = await fetch(`${assetsPrefix}/api/delete?key=${encodeURIComponent(filename)}`, {
+					method: 'DELETE'
+				});
+				
+				if (!response.ok) {
+					throw new Error('Failed to delete file');
+				}
+				
+				// Remove the card from UI
+				const card = deleteBtn.closest('.card');
+				if (card) {
+					card.remove();
+				}
+				
+				// Check if list is empty
+				if (filesList.children.length === 0) {
+					noFiles.classList.remove('hidden');
+				}
+				
+			} catch (error) {
+				console.error('Delete error:', error);
+				alert('Failed to delete file');
+				deleteBtn.disabled = false;
+				deleteBtn.innerHTML = originalText;
+			}
+		}
 	});
 
 	// Load files on page load
