@@ -6,6 +6,8 @@ let cachedAuth: AuthInstance | undefined;
 
 const createAuth = (env: Env): AuthInstance =>
     betterAuth({
+        baseURL: env.BETTER_AUTH_URL || env.PUBLIC_BETTER_AUTH_URL || "http://localhost:4321/ca/api/auth",
+        basePath: "/ca/api/auth",
         // Stateless mode - no database configuration (cookies only)
         socialProviders: {
             google: {
@@ -14,7 +16,6 @@ const createAuth = (env: Env): AuthInstance =>
             },
         },
         secret: env.BETTER_AUTH_SECRET,
-        basePath: "/ca/api/auth",
         trustedOrigins: [
             env.ORIGIN || env.ORIGIN_DEV || "http://localhost:4321",
         ],

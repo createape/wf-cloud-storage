@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1764344487121,
@@ -16,6 +16,10 @@
                 {
                     "date": 1764356747892,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import { getAuth } from \"./lib/auth\";\r\n+import { getAuth, type AuthEnv } from \"./lib/auth\";\r\n import { defineMiddleware } from \"astro:middleware\";\r\n \r\n // Base path from astro config\r\n const basePath = \"/ca\";\r\n@@ -8,9 +8,20 @@\n const protectedRoutes = [\"/\", \"/files\"];\r\n const protectedApiRoutes = [\"/api/upload\", \"/api/multipart-upload\", \"/api/list-assets\"];\r\n \r\n export const onRequest = defineMiddleware(async (context, next) => {\r\n-    const auth = getAuth(context.locals.runtime.env);\r\n+    const runtimeEnv = context.locals.runtime.env;\r\n+    const authEnv: AuthEnv = {\r\n+        GOOGLE_CLIENT_ID: runtimeEnv.GOOGLE_CLIENT_ID,\r\n+        GOOGLE_CLIENT_SECRET: runtimeEnv.GOOGLE_CLIENT_SECRET,\r\n+        BETTER_AUTH_SECRET: runtimeEnv.BETTER_AUTH_SECRET,\r\n+        BETTER_AUTH_URL: runtimeEnv.BETTER_AUTH_URL,\r\n+        PUBLIC_BETTER_AUTH_URL: runtimeEnv.PUBLIC_BETTER_AUTH_URL,\r\n+        ORIGIN: runtimeEnv.ORIGIN,\r\n+        ORIGIN_DEV: runtimeEnv.ORIGIN_DEV,\r\n+    };\r\n+\r\n+    const auth = getAuth(authEnv);\r\n     // Get session from Better Auth\r\n     const session = await auth.api.getSession({\r\n         headers: context.request.headers,\r\n     });\r\n"
+                },
+                {
+                    "date": 1764359995420,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import { getAuth, type AuthEnv } from \"./lib/auth\";\r\n+import { getAuth } from \"./lib/auth\";\r\n import { defineMiddleware } from \"astro:middleware\";\r\n \r\n // Base path from astro config\r\n const basePath = \"/ca\";\r\n@@ -8,20 +8,9 @@\n const protectedRoutes = [\"/\", \"/files\"];\r\n const protectedApiRoutes = [\"/api/upload\", \"/api/multipart-upload\", \"/api/list-assets\"];\r\n \r\n export const onRequest = defineMiddleware(async (context, next) => {\r\n-    const runtimeEnv = context.locals.runtime.env;\r\n-    const authEnv: AuthEnv = {\r\n-        GOOGLE_CLIENT_ID: runtimeEnv.GOOGLE_CLIENT_ID,\r\n-        GOOGLE_CLIENT_SECRET: runtimeEnv.GOOGLE_CLIENT_SECRET,\r\n-        BETTER_AUTH_SECRET: runtimeEnv.BETTER_AUTH_SECRET,\r\n-        BETTER_AUTH_URL: runtimeEnv.BETTER_AUTH_URL,\r\n-        PUBLIC_BETTER_AUTH_URL: runtimeEnv.PUBLIC_BETTER_AUTH_URL,\r\n-        ORIGIN: runtimeEnv.ORIGIN,\r\n-        ORIGIN_DEV: runtimeEnv.ORIGIN_DEV,\r\n-    };\r\n-\r\n-    const auth = getAuth(authEnv);\r\n+    const auth = getAuth(context.locals.runtime.env);\r\n     // Get session from Better Auth\r\n     const session = await auth.api.getSession({\r\n         headers: context.request.headers,\r\n     });\r\n"
                 }
             ],
             "date": 1764344487121,
