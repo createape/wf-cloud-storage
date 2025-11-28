@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1764344487155,
@@ -12,6 +12,10 @@
                 {
                     "date": 1764354459874,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,8 @@\n-import { auth } from \"../../../lib/auth\";\r\n+import { getAuth } from \"../../../lib/auth\";\r\n import type { APIRoute } from \"astro\";\r\n \r\n export const ALL: APIRoute = async (ctx) => {\r\n+    const auth = getAuth(ctx.locals.runtime.env);\r\n+\r\n     return auth.handler(ctx.request);\r\n };\r\n"
+                },
+                {
+                    "date": 1764356747892,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,19 @@\n-import { getAuth } from \"../../../lib/auth\";\r\n+import { getAuth, type AuthEnv } from \"../../../lib/auth\";\r\n import type { APIRoute } from \"astro\";\r\n \r\n export const ALL: APIRoute = async (ctx) => {\r\n-    const auth = getAuth(ctx.locals.runtime.env);\r\n+    const runtimeEnv = ctx.locals.runtime.env;\r\n+    const authEnv: AuthEnv = {\r\n+        GOOGLE_CLIENT_ID: runtimeEnv.GOOGLE_CLIENT_ID,\r\n+        GOOGLE_CLIENT_SECRET: runtimeEnv.GOOGLE_CLIENT_SECRET,\r\n+        BETTER_AUTH_SECRET: runtimeEnv.BETTER_AUTH_SECRET,\r\n+        BETTER_AUTH_URL: runtimeEnv.BETTER_AUTH_URL,\r\n+        PUBLIC_BETTER_AUTH_URL: runtimeEnv.PUBLIC_BETTER_AUTH_URL,\r\n+        ORIGIN: runtimeEnv.ORIGIN,\r\n+        ORIGIN_DEV: runtimeEnv.ORIGIN_DEV,\r\n+    };\r\n \r\n+    const auth = getAuth(authEnv);\r\n+\r\n     return auth.handler(ctx.request);\r\n };\r\n"
                 }
             ],
             "date": 1764344487155,
