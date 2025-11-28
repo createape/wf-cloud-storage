@@ -1,4 +1,4 @@
-import { auth } from "./lib/auth";
+import { getAuth } from "./lib/auth";
 import { defineMiddleware } from "astro:middleware";
 
 // Base path from astro config
@@ -9,6 +9,7 @@ const protectedRoutes = ["/", "/files"];
 const protectedApiRoutes = ["/api/upload", "/api/multipart-upload", "/api/list-assets"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
+    const auth = getAuth(context.locals.runtime.env);
     // Get session from Better Auth
     const session = await auth.api.getSession({
         headers: context.request.headers,
