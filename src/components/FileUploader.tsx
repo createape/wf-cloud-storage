@@ -20,6 +20,7 @@ export default function FileUploader() {
   const [reuploadingKey, setReuploadingKey] = useState<string | null>(null)
   const [pendingReuploadKey, setPendingReuploadKey] = useState<string | null>(null)
   const [pendingReuploadMode, setPendingReuploadMode] = useState<'simple' | 'multipart'>('simple')
+  const [deletingKey, setDeletingKey] = useState<string | null>(null)
   const reuploadInputRef = useRef<HTMLInputElement | null>(null)
 
   // File type icons mapping
@@ -306,6 +307,40 @@ export default function FileUploader() {
     if (reuploadInputRef.current) {
       reuploadInputRef.current.value = ''
       reuploadInputRef.current.click()
+    }
+  }
+
+  const handleDelete = async (fileKey: string) => {
+    if (deletingKey) {
+      return
+    }
+
+    if (!confirm(`Are you sure you want to delete "${fileKey}"?`)) {
+      return
+    }
+
+    setDeletingKey(fileKey)
+
+    try {
+      const response = await fetch(`${import.meta.env.BASE_URL}/api/delete`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ key: fileKey }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete file')
+      }
+
+      alert('File deleted successfully!')
+      await loadFiles()
+    } catch (error) {
+      console.error('Delete failed:', error)
+      alert('Failed to delete file. Please try again.')
+    } finally {
+      setDeletingKey(null)
     }
   }
 
@@ -706,6 +741,34 @@ export default function FileUploader() {
                         }}
                       >
                         {reuploadingKey === fileKey ? 'Uploading...' : 'Reupload'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(fileKey)}
+                        disabled={Boolean(deletingKey)}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '4px',
+                          border: '1px solid #dc2626',
+                          backgroundColor: deletingKey === fileKey ? '#fee2e2' : 'white',
+                          color: '#dc2626',
+                          fontSize: '0.8rem',
+                          fontWeight: '500',
+                          cursor: deletingKey ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.3s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!deletingKey) {
+                            e.currentTarget.style.backgroundColor = '#fef2f2'
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!deletingKey) {
+                            e.currentTarget.style.backgroundColor = deletingKey === fileKey ? '#fee2e2' : 'white'
+                          }
+                        }}
+                      >
+                        {deletingKey === fileKey ? 'Deleting...' : 'Delete'}
                       </button>
                     </div>
                   </div>
