@@ -8,13 +8,6 @@ interface Props {
 
 const { title = 'Webflow Cloud - Astro Starter' } = Astro.props
 const user = Astro.locals.user
-const runtimeEnv = Astro.locals.runtime?.env ?? {}
-const clientRuntimeEnv = {
-  BETTER_AUTH_URL: runtimeEnv.BETTER_AUTH_URL ?? '',
-  PUBLIC_BETTER_AUTH_URL: runtimeEnv.PUBLIC_BETTER_AUTH_URL ?? '',
-  ORIGIN: runtimeEnv.ORIGIN ?? '',
-  ORIGIN_DEV: runtimeEnv.ORIGIN_DEV ?? '',
-}
 ---
 
 <!doctype html>
@@ -30,10 +23,6 @@ const clientRuntimeEnv = {
     <title>{title}</title>
   </head>
   <body>
-    <script define:vars={{ runtimeEnv: clientRuntimeEnv }} is:inline>
-      const existingEnv = globalThis.__WF_RUNTIME_ENV__ || {}
-      globalThis.__WF_RUNTIME_ENV__ = { ...existingEnv, ...runtimeEnv }
-    </script>
     {
       user && (
         <div class="navbar bg-base-100 shadow-sm">

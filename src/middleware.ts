@@ -1,4 +1,4 @@
-import { getAuth } from "./lib/auth";
+import { getAuth, type AuthEnv } from "./lib/auth";
 import { defineMiddleware } from "astro:middleware";
 
 // Base path from astro config
@@ -9,7 +9,18 @@ const protectedRoutes = ["/", "/files"];
 const protectedApiRoutes = ["/api/upload", "/api/multipart-upload", "/api/list-assets"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
-    const auth = getAuth(context.locals.runtime.env);
+    const runtimeEnv = context.locals.runtime.env;
+    const authEnv: AuthEnv = {
+        GOOGLE_CLIENT_ID: runtimeEnv.GOOGLE_CLIENT_ID,
+        GOOGLE_CLIENT_SECRET: runtimeEnv.GOOGLE_CLIENT_SECRET,
+        BETTER_AUTH_SECRET: runtimeEnv.BETTER_AUTH_SECRET,
+        BETTER_AUTH_URL: runtimeEnv.BETTER_AUTH_URL,
+        PUBLIC_BETTER_AUTH_URL: runtimeEnv.PUBLIC_BETTER_AUTH_URL,
+        ORIGIN: runtimeEnv.ORIGIN,
+        ORIGIN_DEV: runtimeEnv.ORIGIN_DEV,
+    };
+
+    const auth = getAuth(authEnv);
     // Get session from Better Auth
     const session = await auth.api.getSession({
         headers: context.request.headers,
