@@ -11,11 +11,7 @@ interface FileData {
   }
 }
 
-interface FileUploaderProps {
-  assetsPrefix?: string
-}
-
-export default function FileUploader({ assetsPrefix = '/ca' }: FileUploaderProps) {
+export default function FileUploader() {
   const [isUploading, setIsUploading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [files, setFiles] = useState<FileData[]>([])
@@ -114,8 +110,7 @@ export default function FileUploader({ assetsPrefix = '/ca' }: FileUploaderProps
       formData.append('key', keyOverride)
     }
 
-    // Use assetsPrefix for uploads to bypass public domain CDN limits
-    const response = await fetch(`${assetsPrefix}/api/upload`, {
+    const response = await fetch(`${import.meta.env.BASE_URL}/api/upload`, {
       method: 'POST',
       credentials: 'include',
       body: formData,
@@ -136,18 +131,14 @@ export default function FileUploader({ assetsPrefix = '/ca' }: FileUploaderProps
       onProgress?: (value: number) => void
     } = {}
   ) => {
-    // Use assetsPrefix for uploads to bypass public domain CDN limits
-    // assetsPrefix can be a full URL (in production) or a path (in dev)
-    const isFullUrl = assetsPrefix.startsWith('http')
-    const baseUrl = isFullUrl ? assetsPrefix : window.location.origin + assetsPrefix
-    const BASE_CF_URL = `${baseUrl}/api/multipart-upload`
+    const BASE_CF_URL = `${import.meta.env.BASE_URL}/api/multipart-upload`
     const key = options.keyOverride || file.name
     const CHUNK_SIZE = 5 * 1024 * 1024 // 5MB minimum for R2 multipart (except last part)
     const totalParts = Math.ceil(file.size / CHUNK_SIZE)
     const updateProgress = options.onProgress || (() => {})
 
     // Step 1: Initiate upload
-    const createUploadUrl = new URL(BASE_CF_URL)
+    const createUploadUrl = new URL(BASE_CF_URL, window.location.origin)
     createUploadUrl.searchParams.append('action', 'create')
 
     const createResponse = await fetch(createUploadUrl, {
@@ -202,7 +193,7 @@ export default function FileUploader({ assetsPrefix = '/ca' }: FileUploaderProps
     }
 
     // Step 3: Complete upload
-    const completeUploadUrl = new URL(BASE_CF_URL)
+    const completeUploadUrl = new URL(BASE_CF_URL, window.location.origin)
     completeUploadUrl.searchParams.append('action', 'complete')
 
     const completeResponse = await fetch(completeUploadUrl, {

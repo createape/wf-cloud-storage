@@ -1,20 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro'
-
-// Get the assets prefix from runtime environment (Webflow Cloud provides this)
-// ASSETS_PREFIX is a full URL like https://xxx.wf-app-prod.cosmic.webflow.services
-// that points directly to the Worker, bypassing public domain CDN limits
-const runtime = Astro.locals.runtime as { env?: { ASSETS_PREFIX?: string } } | undefined;
-const assetsPrefix = runtime?.env?.ASSETS_PREFIX || import.meta.env.BASE_URL || '/ca';
-
-// Debug logging
-console.log('files.astro - ASSETS_PREFIX from runtime:', runtime?.env?.ASSETS_PREFIX);
-console.log('files.astro - Using assetsPrefix:', assetsPrefix);
 ---
 
 <Layout title="File Uploader">
-  <!-- Pass assetsPrefix as a data attribute so JavaScript can access it -->
-  <div class="container mx-auto p-6 max-w-6xl" data-assets-prefix={assetsPrefix}>
+  <div class="container mx-auto p-6 max-w-6xl">
     <h1 class="text-4xl font-bold text-center mb-8">File Uploader</h1>
 
     <!-- Upload Section -->
@@ -84,9 +73,7 @@ console.log('files.astro - Using assetsPrefix:', assetsPrefix);
 </Layout>
 
 <script>
-  // Get assetsPrefix from the data attribute set by Astro
-  const container = document.querySelector('[data-assets-prefix]') as HTMLElement
-  const assetsPrefix = container?.dataset.assetsPrefix || '/ca'
+  const baseUrl = import.meta.env.BASE_URL || '/ca'
 
   // DOM elements
   const uploadForm = document.getElementById('uploadForm') as HTMLFormElement
@@ -171,7 +158,7 @@ console.log('files.astro - Using assetsPrefix:', assetsPrefix);
       loadingFiles.classList.remove('hidden')
       filesList.innerHTML = ''
 
-      const response = await fetch(`${assetsPrefix}/api/list-assets`, {
+      const response = await fetch(`${baseUrl}/api/list-assets`, {
         credentials: 'include',
       })
       if (!response.ok) {
@@ -260,7 +247,7 @@ console.log('files.astro - Using assetsPrefix:', assetsPrefix);
         progressBar.style.width = `${progress}%`
         progressText.textContent = `Uploading ${file.name}...`
 
-        const response = await fetch(`${assetsPrefix}/api/upload`, {
+        const response = await fetch(`${baseUrl}/api/upload`, {
           method: 'POST',
           credentials: 'include',
           body: formData,
@@ -301,7 +288,7 @@ console.log('files.astro - Using assetsPrefix:', assetsPrefix);
     }
 
     try {
-      const response = await fetch(`${assetsPrefix}/api/delete`, {
+      const response = await fetch(`${baseUrl}/api/delete`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {

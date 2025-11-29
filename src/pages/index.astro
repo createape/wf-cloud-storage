@@ -1,21 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import FileUploader from '../components/FileUploader';
-
-// Get the assets prefix from runtime environment (Webflow Cloud provides this)
-// ASSETS_PREFIX is a full URL like https://xxx.wf-app-prod.cosmic.webflow.services
-// that points directly to the Worker, bypassing public domain CDN limits
-const runtime = Astro.locals.runtime as { env?: { ASSETS_PREFIX?: string } } | undefined;
-const assetsPrefix = runtime?.env?.ASSETS_PREFIX || import.meta.env.BASE_URL || '/ca';
-
-// Debug logging (remove in production)
-console.log('ASSETS_PREFIX from runtime:', runtime?.env?.ASSETS_PREFIX);
-console.log('Using assetsPrefix:', assetsPrefix);
+import Layout from '../layouts/Layout.astro'
+import FileUploader from '../components/FileUploader'
 ---
 
 <Layout>
   <main>
-    <FileUploader client:load assetsPrefix={assetsPrefix} />
+    <FileUploader client:load />
   </main>
 </Layout>
 
