@@ -17,7 +17,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const pathname = new URL(context.request.url).pathname;
 
     // Skip auth check if env is not available (build time)
-    if (!env?.GOOGLE_CLIENT_ID || !env?.GOOGLE_CLIENT_SECRET) {
+    if (!env?.GOOGLE_CLIENT_ID || !env?.GOOGLE_CLIENT_SECRET || !env?.DB) {
         console.log("Skipping auth - missing env vars");
         return next();
     }
@@ -33,6 +33,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
             GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET,
             BETTER_AUTH_SECRET: env.BETTER_AUTH_SECRET,
             ORIGIN: env.ORIGIN,
+            DB: env.DB,
         });
 
         const session = await auth.api.getSession({

@@ -10,6 +10,7 @@ const handleAuth: APIRoute = async ({ request, locals }) => {
             GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET,
             BETTER_AUTH_SECRET: env.BETTER_AUTH_SECRET,
             ORIGIN: env.ORIGIN,
+            DB: env.DB,
         });
 
         return auth.handler(request);

@@ -14,6 +14,7 @@ export async function getSession(context: APIContext) {
             GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET,
             BETTER_AUTH_SECRET: env.BETTER_AUTH_SECRET,
             ORIGIN: env.ORIGIN,
+            DB: env.DB,
         });
 
         const session = await auth.api.getSession({

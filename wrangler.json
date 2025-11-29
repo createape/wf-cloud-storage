@@ -14,6 +14,14 @@
   "observability": {
     "enabled": true
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "auth-db",
+      "database_id": "2fa08c40-b8d3-44e9-8baa-392cdb4ef12c",
+      "migrations_dir": "drizzle"
+    }
+  ],
   "r2_buckets": [
     {
       "binding": "CLOUD_FILES",

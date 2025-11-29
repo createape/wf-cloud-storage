@@ -1,4 +1,7 @@
 import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { drizzle } from "drizzle-orm/d1";
+import * as schema from "../db/schema";
 
 // Auth Env interface for type safety
 interface AuthEnv {
@@ -6,18 +9,24 @@ interface AuthEnv {
     GOOGLE_CLIENT_SECRET: string;
     BETTER_AUTH_SECRET?: string;
     ORIGIN: string;
+    DB: D1Database;
 }
 
 /**
  * Create a Better Auth instance with runtime environment variables.
- * Uses stateless mode (no database) - sessions stored in cookies.
+ * Uses D1 database for user/session storage.
  */
 export function createAuth(env: AuthEnv) {
+    const db = drizzle(env.DB, { schema });
+    
     return betterAuth({
         baseURL: env.ORIGIN,
         basePath: "/ca/api/auth",
         secret: env.BETTER_AUTH_SECRET,
         trustedOrigins: [env.ORIGIN],
+        database: drizzleAdapter(db, {
+            provider: "sqlite",
+        }),
         socialProviders: {
             google: {
                 clientId: env.GOOGLE_CLIENT_ID,
@@ -34,8 +43,6 @@ export function createAuth(env: AuthEnv) {
             accountLinking: {
                 enabled: true,
             },
-            // Store account data in cookie for stateless mode
-            storeAccountCookie: true,
         },
     });
 }
