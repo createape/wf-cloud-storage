@@ -102,6 +102,8 @@ export const POST: APIRoute = async (context) => {
           parts: parsedData.parts as R2UploadedPart[],
         };
 
+        console.log("Complete upload request:", JSON.stringify(body, null, 2));
+
         if (!body.uploadId || !body.key || !body.parts) {
           return API.error("Missing required parameters", request, 400);
         }
@@ -112,8 +114,13 @@ export const POST: APIRoute = async (context) => {
             body.uploadId
           );
 
-          // Parts are already in R2UploadedPart format
-          const r2Parts = body.parts;
+          // Ensure parts are in correct R2UploadedPart format
+          const r2Parts: R2UploadedPart[] = body.parts.map(part => ({
+            partNumber: part.partNumber,
+            etag: part.etag,
+          }));
+
+          console.log("R2 parts to complete:", JSON.stringify(r2Parts, null, 2));
 
           const object = await multipartUpload.complete(r2Parts);
 
