@@ -33,6 +33,10 @@ export const POST: APIRoute = async (context) => {
   // Set the origin for the API
   API.init((locals.runtime as any).env.ORIGIN);
 
+  const url = new URL(request.url);
+  const action = url.searchParams.get("action");
+  console.log("POST multipart-upload action:", action);
+
   // Auth check
   const authError = await requireAuth(context);
   if (authError) return authError;
@@ -135,8 +139,9 @@ export const POST: APIRoute = async (context) => {
           );
         } catch (error: any) {
           console.error("Failed to complete multipart upload:", error);
+          console.error("Error details:", error.stack || error.toString());
           return API.error(
-            error.message || "Failed to complete multipart upload",
+            `Failed to complete multipart upload: ${error.message || error.toString()}`,
             request,
             400
           );
