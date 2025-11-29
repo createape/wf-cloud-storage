@@ -1,12 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro'
 
-// Get the assets prefix from environment
-const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app'
+// Get the assets prefix from runtime environment (Webflow Cloud provides this)
+// ASSETS_PREFIX is a full URL like https://xxx.wf-app-prod.cosmic.webflow.services
+// that points directly to the Worker, bypassing public domain CDN limits
+const runtime = Astro.locals.runtime as { env?: { ASSETS_PREFIX?: string } } | undefined;
+const assetsPrefix = runtime?.env?.ASSETS_PREFIX || import.meta.env.BASE_URL || '/ca';
+
+// Debug logging
+console.log('files.astro - ASSETS_PREFIX from runtime:', runtime?.env?.ASSETS_PREFIX);
+console.log('files.astro - Using assetsPrefix:', assetsPrefix);
 ---
 
 <Layout title="File Uploader">
-  <div class="container mx-auto p-6 max-w-6xl">
+  <!-- Pass assetsPrefix as a data attribute so JavaScript can access it -->
+  <div class="container mx-auto p-6 max-w-6xl" data-assets-prefix={assetsPrefix}>
     <h1 class="text-4xl font-bold text-center mb-8">File Uploader</h1>
 
     <!-- Upload Section -->
@@ -76,7 +84,9 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app'
 </Layout>
 
 <script>
-  const assetsPrefix = '${assetsPrefix}'
+  // Get assetsPrefix from the data attribute set by Astro
+  const container = document.querySelector('[data-assets-prefix]') as HTMLElement
+  const assetsPrefix = container?.dataset.assetsPrefix || '/ca'
 
   // DOM elements
   const uploadForm = document.getElementById('uploadForm') as HTMLFormElement
@@ -161,7 +171,9 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app'
       loadingFiles.classList.remove('hidden')
       filesList.innerHTML = ''
 
-      const response = await fetch(`${assetsPrefix}/api/list-assets`)
+      const response = await fetch(`${assetsPrefix}/api/list-assets`, {
+        credentials: 'include',
+      })
       if (!response.ok) {
         throw new Error('Failed to load files')
       }
@@ -250,6 +262,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app'
 
         const response = await fetch(`${assetsPrefix}/api/upload`, {
           method: 'POST',
+          credentials: 'include',
           body: formData,
         })
 
@@ -290,6 +303,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app'
     try {
       const response = await fetch(`${assetsPrefix}/api/delete`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
