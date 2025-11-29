@@ -6,6 +6,13 @@ declare namespace Cloudflare {
 		ORIGIN: string;
 		CLOUD_FILES: R2Bucket;
 		ASSETS: Fetcher;
+		// Auth environment variables
+		AUTH_SECRET: string;
+		GOOGLE_CLIENT_ID: string;
+		GOOGLE_CLIENT_SECRET: string;
+		// Optional: User allowlists
+		ALLOWED_DOMAINS?: string;
+		ALLOWED_EMAILS?: string;
 	}
 }
 interface Env extends Cloudflare.Env {}
