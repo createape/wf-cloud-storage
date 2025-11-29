@@ -76,12 +76,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
             if (pathname.startsWith('/ca/api/')) {
                 return new Response(
                     JSON.stringify({ error: 'Server configuration error' }),
-                    { 
-                        status: 500, 
-                        headers: { 
+                    {
+                        status: 500,
+                        headers: {
                             'Content-Type': 'application/json',
                             ...getCorsHeaders(request)
-                        } 
+                        }
                     }
                 )
             }
@@ -95,12 +95,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
             if (pathname.startsWith('/ca/api/')) {
                 return new Response(
                     JSON.stringify({ error: 'Unauthorized' }),
-                    { 
-                        status: 401, 
-                        headers: { 
+                    {
+                        status: 401,
+                        headers: {
                             'Content-Type': 'application/json',
                             ...getCorsHeaders(request)
-                        } 
+                        }
                     }
                 )
             }

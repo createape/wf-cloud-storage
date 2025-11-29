@@ -24,13 +24,13 @@ function getAuthHeaders(): HeadersInit {
 async function authFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   const authHeaders = getAuthHeaders()
   const headers = new Headers(init?.headers)
-  
+
   // Add auth header if we have a token
   const authHeader = (authHeaders as Record<string, string>).Authorization
   if (authHeader) {
     headers.set('Authorization', authHeader)
   }
-  
+
   return fetch(input, { ...init, headers })
 }
 
