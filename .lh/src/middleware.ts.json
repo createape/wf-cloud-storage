@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1764443175327,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764444499054,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,8 +17,9 @@\n     const pathname = new URL(context.request.url).pathname;\r\n \r\n     // Skip auth check if env is not available (build time)\r\n     if (!env?.GOOGLE_CLIENT_ID || !env?.GOOGLE_CLIENT_SECRET) {\r\n+        console.log(\"Skipping auth - missing env vars\");\r\n         return next();\r\n     }\r\n \r\n     // Allow public routes without auth\r\n@@ -53,8 +54,13 @@\n     } catch (error) {\r\n         console.error(\"Middleware auth error:\", error);\r\n         (context.locals as any).user = null;\r\n         (context.locals as any).session = null;\r\n+        \r\n+        // On auth error, redirect to login for pages (not API)\r\n+        if (!pathname.startsWith(\"/ca/api/\")) {\r\n+            return context.redirect(\"/ca/login\");\r\n+        }\r\n     }\r\n \r\n     return next();\r\n });\r\n"
                 }
             ],
             "date": 1764443175327,

@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1764443175246,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764444499052,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,40 +1,41 @@\n import { betterAuth } from \"better-auth\";\r\n \r\n // Auth Env interface for type safety\r\n interface AuthEnv {\r\n-  GOOGLE_CLIENT_ID: string;\r\n-  GOOGLE_CLIENT_SECRET: string;\r\n-  BETTER_AUTH_SECRET?: string;\r\n-  ORIGIN: string;\r\n+    GOOGLE_CLIENT_ID: string;\r\n+    GOOGLE_CLIENT_SECRET: string;\r\n+    BETTER_AUTH_SECRET?: string;\r\n+    ORIGIN: string;\r\n }\r\n \r\n /**\r\n  * Create a Better Auth instance with runtime environment variables.\r\n  * Uses stateless mode (no database) - sessions stored in cookies.\r\n  */\r\n export function createAuth(env: AuthEnv) {\r\n-  return betterAuth({\r\n-    baseURL: env.ORIGIN,\r\n-    basePath: \"/ca/api/auth\",\r\n-    secret: env.BETTER_AUTH_SECRET,\r\n-    socialProviders: {\r\n-      google: {\r\n-        clientId: env.GOOGLE_CLIENT_ID,\r\n-        clientSecret: env.GOOGLE_CLIENT_SECRET,\r\n-      },\r\n-    },\r\n-    session: {\r\n-      cookieCache: {\r\n-        enabled: true,\r\n-        maxAge: 7 * 24 * 60 * 60, // 7 days\r\n-      },\r\n-    },\r\n-    account: {\r\n-      accountLinking: {\r\n-        enabled: true,\r\n-      },\r\n-    },\r\n-  });\r\n+    return betterAuth({\r\n+        baseURL: env.ORIGIN,\r\n+        basePath: \"/ca/api/auth\",\r\n+        secret: env.BETTER_AUTH_SECRET,\r\n+        trustedOrigins: [env.ORIGIN],\r\n+        socialProviders: {\r\n+            google: {\r\n+                clientId: env.GOOGLE_CLIENT_ID,\r\n+                clientSecret: env.GOOGLE_CLIENT_SECRET,\r\n+            },\r\n+        },\r\n+        session: {\r\n+            cookieCache: {\r\n+                enabled: true,\r\n+                maxAge: 7 * 24 * 60 * 60, // 7 days\r\n+            },\r\n+        },\r\n+        account: {\r\n+            accountLinking: {\r\n+                enabled: true,\r\n+            },\r\n+        },\r\n+    });\r\n }\r\n \r\n export type Auth = ReturnType<typeof createAuth>;\r\n"
                 }
             ],
             "date": 1764443175246,
