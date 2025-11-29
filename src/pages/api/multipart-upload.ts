@@ -196,11 +196,11 @@ export const PUT: APIRoute = async (context) => {
     try {
       const multipartUpload = bucket.resumeMultipartUpload(key, uploadId);
 
-      // Convert request body to ArrayBuffer to get known length
-      const arrayBuffer = await request.arrayBuffer();
+      // Stream the body directly to R2 to avoid memory issues
+      // R2's uploadPart accepts ReadableStream
       const uploadedPart = await multipartUpload.uploadPart(
         partNumber,
-        arrayBuffer
+        request.body!
       );
 
       return API.success(
