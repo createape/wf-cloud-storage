@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/lib/auth/arctic.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764456537324,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764456537324,
+            "name": "Commit-0",
+            "content": "import { Google } from 'arctic'\r\n\r\n/**\r\n * Creates a Google OAuth provider instance\r\n * @param clientId - Google OAuth client ID\r\n * @param clientSecret - Google OAuth client secret\r\n * @param origin - The origin URL for the redirect URI\r\n */\r\nexport function createGoogleProvider(\r\n    clientId: string,\r\n    clientSecret: string,\r\n    origin: string\r\n): Google {\r\n    const redirectUri = `${origin}/ca/api/auth/callback`\r\n    return new Google(clientId, clientSecret, redirectUri)\r\n}\r\n\r\n// Re-export arctic utilities\r\nexport { generateState, generateCodeVerifier } from 'arctic'\r\nexport { Google } from 'arctic'\r\n"
+        }
+    ]
+}

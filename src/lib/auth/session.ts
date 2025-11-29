@@ -8,25 +8,25 @@ import { AUTH_CONFIG, type SessionPayload } from './config'
  * @returns The signed JWT string
  */
 export async function createSession(
-  payload: SessionPayload,
-  secret: string
+    payload: SessionPayload,
+    secret: string
 ): Promise<string> {
-  const secretKey = new TextEncoder().encode(secret)
+    const secretKey = new TextEncoder().encode(secret)
 
-  const jwt = await new jose.SignJWT({
-    sub: payload.sub,
-    email: payload.email,
-    name: payload.name,
-    picture: payload.picture,
-  })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setIssuer(AUTH_CONFIG.JWT_ISSUER)
-    .setAudience(AUTH_CONFIG.JWT_AUDIENCE)
-    .setExpirationTime(AUTH_CONFIG.JWT_EXPIRATION)
-    .sign(secretKey)
+    const jwt = await new jose.SignJWT({
+        sub: payload.sub,
+        email: payload.email,
+        name: payload.name,
+        picture: payload.picture,
+    })
+        .setProtectedHeader({ alg: 'HS256' })
+        .setIssuedAt()
+        .setIssuer(AUTH_CONFIG.JWT_ISSUER)
+        .setAudience(AUTH_CONFIG.JWT_AUDIENCE)
+        .setExpirationTime(AUTH_CONFIG.JWT_EXPIRATION)
+        .sign(secretKey)
 
-  return jwt
+    return jwt
 }
 
 /**
@@ -36,33 +36,33 @@ export async function createSession(
  * @returns The session payload if valid, null otherwise
  */
 export async function verifySession(
-  token: string | undefined,
-  secret: string
+    token: string | undefined,
+    secret: string
 ): Promise<SessionPayload | null> {
-  if (!token) return null
+    if (!token) return null
 
-  try {
-    const secretKey = new TextEncoder().encode(secret)
-    const { payload } = await jose.jwtVerify(token, secretKey, {
-      issuer: AUTH_CONFIG.JWT_ISSUER,
-      audience: AUTH_CONFIG.JWT_AUDIENCE,
-    })
+    try {
+        const secretKey = new TextEncoder().encode(secret)
+        const { payload } = await jose.jwtVerify(token, secretKey, {
+            issuer: AUTH_CONFIG.JWT_ISSUER,
+            audience: AUTH_CONFIG.JWT_AUDIENCE,
+        })
 
-    // Validate required fields
-    if (!payload.sub || !payload.email || !payload.name) {
-      return null
+        // Validate required fields
+        if (!payload.sub || !payload.email || !payload.name) {
+            return null
+        }
+
+        return {
+            sub: payload.sub as string,
+            email: payload.email as string,
+            name: payload.name as string,
+            picture: payload.picture as string | undefined,
+        }
+    } catch (error) {
+        // Token is invalid or expired
+        return null
     }
-
-    return {
-      sub: payload.sub as string,
-      email: payload.email as string,
-      name: payload.name as string,
-      picture: payload.picture as string | undefined,
-    }
-  } catch (error) {
-    // Token is invalid or expired
-    return null
-  }
 }
 
 /**
@@ -71,28 +71,28 @@ export async function verifySession(
  * @returns User info from the token
  */
 export function decodeGoogleIdToken(idToken: string): {
-  sub: string
-  email: string
-  name: string
-  picture?: string
+    sub: string
+    email: string
+    name: string
+    picture?: string
 } | null {
-  try {
-    // Decode the JWT without verification (Google already verified it)
-    const payload = jose.decodeJwt(idToken)
-    
-    if (!payload.sub || !payload.email || !payload.name) {
-      return null
-    }
+    try {
+        // Decode the JWT without verification (Google already verified it)
+        const payload = jose.decodeJwt(idToken)
 
-    return {
-      sub: payload.sub as string,
-      email: payload.email as string,
-      name: payload.name as string,
-      picture: payload.picture as string | undefined,
+        if (!payload.sub || !payload.email || !payload.name) {
+            return null
+        }
+
+        return {
+            sub: payload.sub as string,
+            email: payload.email as string,
+            name: payload.name as string,
+            picture: payload.picture as string | undefined,
+        }
+    } catch {
+        return null
     }
-  } catch {
-    return null
-  }
 }
 
 /**
@@ -103,33 +103,33 @@ export function decodeGoogleIdToken(idToken: string): {
  * @returns True if user is allowed
  */
 export function isUserAllowed(
-  email: string,
-  allowedDomains?: string,
-  allowedEmails?: string
+    email: string,
+    allowedDomains?: string,
+    allowedEmails?: string
 ): boolean {
-  // If no restrictions, allow all
-  if (!allowedDomains && !allowedEmails) {
-    return true
-  }
-
-  const emailLower = email.toLowerCase()
-
-  // Check allowed emails
-  if (allowedEmails) {
-    const emails = allowedEmails.split(/[\s,]+/).filter(Boolean).map(e => e.toLowerCase())
-    if (emails.includes(emailLower)) {
-      return true
+    // If no restrictions, allow all
+    if (!allowedDomains && !allowedEmails) {
+        return true
     }
-  }
 
-  // Check allowed domains
-  if (allowedDomains) {
-    const domains = allowedDomains.split(/[\s,]+/).filter(Boolean).map(d => d.toLowerCase())
-    const userDomain = emailLower.split('@')[1]
-    if (userDomain && domains.includes(userDomain)) {
-      return true
+    const emailLower = email.toLowerCase()
+
+    // Check allowed emails
+    if (allowedEmails) {
+        const emails = allowedEmails.split(/[\s,]+/).filter(Boolean).map(e => e.toLowerCase())
+        if (emails.includes(emailLower)) {
+            return true
+        }
     }
-  }
 
-  return false
+    // Check allowed domains
+    if (allowedDomains) {
+        const domains = allowedDomains.split(/[\s,]+/).filter(Boolean).map(d => d.toLowerCase())
+        const userDomain = emailLower.split('@')[1]
+        if (userDomain && domains.includes(userDomain)) {
+            return true
+        }
+    }
+
+    return false
 }

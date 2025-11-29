@@ -7,12 +7,12 @@ import { Google } from 'arctic'
  * @param origin - The origin URL for the redirect URI
  */
 export function createGoogleProvider(
-  clientId: string,
-  clientSecret: string,
-  origin: string
+    clientId: string,
+    clientSecret: string,
+    origin: string
 ): Google {
-  const redirectUri = `${origin}/ca/api/auth/callback`
-  return new Google(clientId, clientSecret, redirectUri)
+    const redirectUri = `${origin}/ca/api/auth/callback`
+    return new Google(clientId, clientSecret, redirectUri)
 }
 
 // Re-export arctic utilities

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/lib/auth/config.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764456537291,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764456537291,
+            "name": "Commit-0",
+            "content": "// Auth configuration constants\r\n\r\nexport const AUTH_CONFIG = {\r\n    // Cookie names\r\n    SESSION_COOKIE: 'session',\r\n    STATE_COOKIE: 'oauth_state',\r\n    CODE_VERIFIER_COOKIE: 'oauth_code_verifier',\r\n\r\n    // JWT settings\r\n    JWT_ISSUER: 'wf-cloud-storage',\r\n    JWT_AUDIENCE: 'wf-cloud-storage',\r\n    JWT_EXPIRATION: '7d',\r\n\r\n    // Cookie settings\r\n    COOKIE_OPTIONS: {\r\n        httpOnly: true,\r\n        secure: true,\r\n        sameSite: 'lax' as const,\r\n        path: '/ca',\r\n        maxAge: 60 * 60 * 24 * 7, // 7 days\r\n    },\r\n\r\n    // OAuth temp cookie settings (short-lived)\r\n    OAUTH_COOKIE_OPTIONS: {\r\n        httpOnly: true,\r\n        secure: true,\r\n        sameSite: 'lax' as const,\r\n        path: '/ca',\r\n        maxAge: 60 * 10, // 10 minutes\r\n    },\r\n\r\n    // Google OAuth scopes\r\n    GOOGLE_SCOPES: ['openid', 'profile', 'email'] as string[],\r\n} as const\r\n\r\n// Session payload interface\r\nexport interface SessionPayload {\r\n    sub: string       // User ID (from Google)\r\n    email: string     // User email\r\n    name: string      // User name\r\n    picture?: string  // Profile picture URL\r\n}\r\n"
+        }
+    ]
+}
