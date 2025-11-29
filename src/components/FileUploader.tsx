@@ -73,7 +73,9 @@ export default function FileUploader() {
   const loadFiles = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${import.meta.env.BASE_URL}/api/list-assets`)
+      const response = await fetch(`${import.meta.env.BASE_URL}/api/list-assets`, {
+        credentials: 'include',
+      })
 
       if (!response.ok) {
         throw new Error('Failed to load files')
@@ -110,6 +112,7 @@ export default function FileUploader() {
 
     const response = await fetch(`${import.meta.env.BASE_URL}/api/upload`, {
       method: 'POST',
+      credentials: 'include',
       body: formData,
     })
 
@@ -128,8 +131,7 @@ export default function FileUploader() {
       onProgress?: (value: number) => void
     } = {}
   ) => {
-    const assetsPrefix = import.meta.env.ASSETS_PREFIX || ''
-    const BASE_CF_URL = `${assetsPrefix}/api/multipart-upload`
+    const BASE_CF_URL = `${import.meta.env.BASE_URL}/api/multipart-upload`
     const key = options.keyOverride || file.name
     const CHUNK_SIZE = 5 * 1024 * 1024 // 5MB
     const totalParts = Math.ceil(file.size / CHUNK_SIZE)
@@ -142,6 +144,7 @@ export default function FileUploader() {
     const createResponse = await fetch(createUploadUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ key, contentType: file.type }),
     })
 
@@ -169,6 +172,7 @@ export default function FileUploader() {
 
       const uploadPartResponse = await fetch(uploadPartUrl, {
         method: 'PUT',
+        credentials: 'include',
         body: blob,
       })
 
@@ -195,6 +199,7 @@ export default function FileUploader() {
     const completeResponse = await fetch(completeUploadUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({
         uploadId,
         key,
@@ -324,6 +329,7 @@ export default function FileUploader() {
     try {
       const response = await fetch(`${import.meta.env.BASE_URL}/api/delete`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -620,7 +626,7 @@ export default function FileUploader() {
             {files.map((file, index) => {
               const fileName = file.name || file.key || 'Unknown file'
               const fileKey = file.key || file.name || `file-${index}`
-              const fileLink = file.link || (file.key ? `${import.meta.env.ASSETS_PREFIX}/api/asset?key=${file.key}` : '')
+              const fileLink = file.link || (file.key ? `${import.meta.env.BASE_URL}/api/asset?key=${file.key}` : '')
               const uploadDate = file.dateUploaded || file.uploaded || new Date().toISOString()
               const isImageFile = isImage(fileName)
 
