@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/middleware.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764443175327,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764443175327,
+            "name": "Commit-0",
+            "content": "import { defineMiddleware } from \"astro:middleware\";\r\nimport { createAuth } from \"./lib/auth\";\r\n\r\n// Routes that don't require authentication\r\nconst PUBLIC_ROUTES = [\r\n    \"/ca/api/auth\", // Auth endpoints\r\n    \"/ca/api/asset\", // Public asset access\r\n    \"/ca/login\", // Login page\r\n];\r\n\r\nfunction isPublicRoute(pathname: string): boolean {\r\n    return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));\r\n}\r\n\r\nexport const onRequest = defineMiddleware(async (context, next) => {\r\n    const env = (context.locals.runtime as any)?.env;\r\n    const pathname = new URL(context.request.url).pathname;\r\n\r\n    // Skip auth check if env is not available (build time)\r\n    if (!env?.GOOGLE_CLIENT_ID || !env?.GOOGLE_CLIENT_SECRET) {\r\n        return next();\r\n    }\r\n\r\n    // Allow public routes without auth\r\n    if (isPublicRoute(pathname)) {\r\n        return next();\r\n    }\r\n\r\n    try {\r\n        const auth = createAuth({\r\n            GOOGLE_CLIENT_ID: env.GOOGLE_CLIENT_ID,\r\n            GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET,\r\n            BETTER_AUTH_SECRET: env.BETTER_AUTH_SECRET,\r\n            ORIGIN: env.ORIGIN,\r\n        });\r\n\r\n        const session = await auth.api.getSession({\r\n            headers: context.request.headers,\r\n        });\r\n\r\n        if (session) {\r\n            (context.locals as any).user = session.user;\r\n            (context.locals as any).session = session.session;\r\n        } else {\r\n            (context.locals as any).user = null;\r\n            (context.locals as any).session = null;\r\n\r\n            // Redirect to login for protected pages (not API routes)\r\n            if (!pathname.startsWith(\"/ca/api/\")) {\r\n                return context.redirect(\"/ca/login\");\r\n            }\r\n        }\r\n    } catch (error) {\r\n        console.error(\"Middleware auth error:\", error);\r\n        (context.locals as any).user = null;\r\n        (context.locals as any).session = null;\r\n    }\r\n\r\n    return next();\r\n});\r\n"
+        }
+    ]
+}

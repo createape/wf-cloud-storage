@@ -4,6 +4,9 @@
   "main": "./dist/_worker.js/index.js",
   "compatibility_date": "2025-04-15",
   "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "GOOGLE_CLIENT_ID": ""
+  },
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist"

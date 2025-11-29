@@ -29,7 +29,7 @@ async function parseRequestData(
 // Creates and completes a new multipart upload session
 export const POST: APIRoute = async (context) => {
   const { request, locals } = context;
-  
+
   // Set the origin for the API
   API.init((locals.runtime as any).env.ORIGIN);
 
@@ -74,8 +74,8 @@ export const POST: APIRoute = async (context) => {
           const multipartUpload = await bucket.createMultipartUpload(body.key, {
             httpMetadata: body.contentType
               ? {
-                  contentType: body.contentType,
-                }
+                contentType: body.contentType,
+              }
               : undefined,
           });
 
@@ -148,7 +148,7 @@ export const POST: APIRoute = async (context) => {
 // Uploads individual parts of a multipart upload
 export const PUT: APIRoute = async (context) => {
   const { request, locals } = context;
-  
+
   // Set the origin for the API
   API.init((locals.runtime as any).env.ORIGIN);
 
@@ -224,7 +224,7 @@ export const PUT: APIRoute = async (context) => {
 // Aborts a multipart upload
 export const DELETE: APIRoute = async (context) => {
   const { request, locals } = context;
-  
+
   // Set the origin for the API
   API.init((locals.runtime as any).env.ORIGIN);
 

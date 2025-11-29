@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/pages/api/list-assets.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764443175327,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764443175327,
+            "name": "Commit-0",
+            "content": "import type { APIRoute } from \"astro\";\nimport { API } from \"../../utils/api\";\nimport { requireAuth } from \"../../lib/auth-guard\";\n\nexport const GET: APIRoute = async (context) => {\n  const { locals, request } = context;\n  \n  try {\n    // Set the origin for the API\n    API.init((locals.runtime as any).env.ORIGIN);\n\n    // Auth check\n    const authError = await requireAuth(context);\n    if (authError) return authError;\n\n    // Handle CORS preflight requests\n    if (request.method === \"OPTIONS\") {\n      console.log(\"CORS preflight request from:\", request.headers.get(\"Origin\"));\n      return API.cors(request);\n    }\n    // Check if bucket is available\n    const bucket = locals.runtime.env.CLOUD_FILES;\n    if (!bucket) {\n      return new Response(\"Cloud storage not configured\", { status: 500 });\n    }\n\n    const options = { limit: 500 };\n    const listed = await bucket.list(options);\n    let truncated = listed.truncated;\n\n    // Paging through the files\n    // @ts-ignore\n    let cursor = truncated ? listed.cursor : undefined;\n\n    while (truncated) {\n      const next = await bucket.list({\n        ...options,\n        cursor: cursor,\n      });\n      listed.objects.push(...next.objects);\n\n      truncated = next.truncated;\n      // @ts-ignore\n      cursor = next.cursor;\n    }\n\n    // Return the files as a JSON object\n    return new Response(JSON.stringify(listed.objects), {\n      headers: { \"Content-Type\": \"application/json\" },\n    });\n  } catch (error) {\n    console.error(\"Error listing assets:\", error);\n    return new Response(\"Failed to list assets\", { status: 500 });\n  }\n};\n"
+        }
+    ]
+}

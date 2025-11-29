@@ -3,11 +3,19 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1764443174419,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764443268550,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,11 @@\n   \"name\": \"astro\",\n   \"main\": \"./dist/_worker.js/index.js\",\n   \"compatibility_date\": \"2025-04-15\",\n   \"compatibility_flags\": [\"nodejs_compat\"],\n+  \"vars\": {\n+    \"GOOGLE_CLIENT_ID\": \"\"\n+  },\n   \"assets\": {\n     \"binding\": \"ASSETS\",\n     \"directory\": \"./dist\"\n   },\n"
+                },
+                {
+                    "date": 1764443289740,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,11 @@\n   \"name\": \"astro\",\n   \"main\": \"./dist/_worker.js/index.js\",\n   \"compatibility_date\": \"2025-04-15\",\n   \"compatibility_flags\": [\"nodejs_compat\"],\n+  \"vars\": {\n+    \"GOOGLE_CLIENT_ID\": \"\"\n+  },\n   \"assets\": {\n     \"binding\": \"ASSETS\",\n     \"directory\": \"./dist\"\n   },\n"
                 }
             ],
             "date": 1764443174419,

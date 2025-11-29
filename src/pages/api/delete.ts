@@ -4,7 +4,7 @@ import { requireAuth } from "../../lib/auth-guard";
 
 export const DELETE: APIRoute = async (context) => {
     const { request, locals } = context;
-    
+
     // Set the origin for the API
     API.init((locals.runtime as any).env.ORIGIN);
 

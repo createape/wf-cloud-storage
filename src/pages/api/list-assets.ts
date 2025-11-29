@@ -4,7 +4,7 @@ import { requireAuth } from "../../lib/auth-guard";
 
 export const GET: APIRoute = async (context) => {
   const { locals, request } = context;
-  
+
   try {
     // Set the origin for the API
     API.init((locals.runtime as any).env.ORIGIN);

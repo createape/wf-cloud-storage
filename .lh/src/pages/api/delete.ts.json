@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1764368626085,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764443175408,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,18 @@\n import type { APIRoute } from \"astro\";\r\n import { API } from \"../../utils/api\";\r\n+import { requireAuth } from \"../../lib/auth-guard\";\r\n \r\n-export const DELETE: APIRoute = async ({ request, locals }) => {\r\n+export const DELETE: APIRoute = async (context) => {\r\n+    const { request, locals } = context;\r\n+    \r\n     // Set the origin for the API\r\n     API.init((locals.runtime as any).env.ORIGIN);\r\n \r\n+    // Auth check\r\n+    const authError = await requireAuth(context);\r\n+    if (authError) return authError;\r\n+\r\n     // Handle CORS preflight requests\r\n     if (request.method === \"OPTIONS\") {\r\n         console.log(\"CORS preflight request from:\", request.headers.get(\"Origin\"));\r\n         return API.cors(request);\r\n"
                 }
             ],
             "date": 1764368626085,
