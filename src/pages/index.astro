@@ -9,6 +9,20 @@ import FileUploader from '../components/FileUploader';
   </main>
 </Layout>
 
+<script>
+  // Extract auth token from URL after OAuth callback and store in localStorage
+  const url = new URL(window.location.href);
+  const token = url.searchParams.get('token');
+  
+  if (token && window.location.hash === '#auth') {
+    localStorage.setItem('auth_token', token);
+    // Clean up URL by removing token param and hash
+    url.searchParams.delete('token');
+    url.hash = '';
+    window.history.replaceState({}, '', url.pathname);
+  }
+</script>
+
 <style>
   main {
     min-height: 100vh;

@@ -11,6 +11,29 @@ interface FileData {
   }
 }
 
+// Helper to get auth headers for API calls
+function getAuthHeaders(): HeadersInit {
+  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('auth_token') : null
+  if (token) {
+    return { Authorization: `Bearer ${token}` }
+  }
+  return {}
+}
+
+// Helper to make authenticated fetch calls
+async function authFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  const authHeaders = getAuthHeaders()
+  const headers = new Headers(init?.headers)
+  
+  // Add auth header if we have a token
+  const authHeader = (authHeaders as Record<string, string>).Authorization
+  if (authHeader) {
+    headers.set('Authorization', authHeader)
+  }
+  
+  return fetch(input, { ...init, headers })
+}
+
 export default function FileUploader() {
   const [isUploading, setIsUploading] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -73,7 +96,7 @@ export default function FileUploader() {
   const loadFiles = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${import.meta.env.BASE_URL}/api/list-assets`)
+      const response = await authFetch(`${import.meta.env.BASE_URL}/api/list-assets`)
 
       if (!response.ok) {
         throw new Error('Failed to load files')
@@ -108,7 +131,7 @@ export default function FileUploader() {
       formData.append('key', keyOverride)
     }
 
-    const response = await fetch(`${import.meta.env.BASE_URL}/api/upload`, {
+    const response = await authFetch(`${import.meta.env.BASE_URL}/api/upload`, {
       method: 'POST',
       body: formData,
     })
@@ -139,7 +162,7 @@ export default function FileUploader() {
     const createUploadUrl = new URL(BASE_CF_URL, window.location.origin)
     createUploadUrl.searchParams.append('action', 'create')
 
-    const createResponse = await fetch(createUploadUrl, {
+    const createResponse = await authFetch(createUploadUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ key, contentType: file.type }),
@@ -167,7 +190,7 @@ export default function FileUploader() {
 
       uploadPartUrl.searchParams.set('partNumber', partNumber.toString())
 
-      const uploadPartResponse = await fetch(uploadPartUrl, {
+      const uploadPartResponse = await authFetch(uploadPartUrl, {
         method: 'PUT',
         body: blob,
       })
@@ -192,7 +215,7 @@ export default function FileUploader() {
     const completeUploadUrl = new URL(BASE_CF_URL, window.location.origin)
     completeUploadUrl.searchParams.append('action', 'complete')
 
-    const completeResponse = await fetch(completeUploadUrl, {
+    const completeResponse = await authFetch(completeUploadUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -322,7 +345,7 @@ export default function FileUploader() {
     setDeletingKey(fileKey)
 
     try {
-      const response = await fetch(`${import.meta.env.BASE_URL}/api/delete`, {
+      const response = await authFetch(`${import.meta.env.BASE_URL}/api/delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

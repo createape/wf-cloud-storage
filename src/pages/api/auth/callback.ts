@@ -84,11 +84,12 @@ export const GET: APIRoute = async ({ url, cookies, redirect, locals }) => {
         // Create session JWT
         const sessionToken = await createSession(userInfo, authSecret)
 
-        // Set session cookie
+        // Set session cookie (for same-origin page requests)
         cookies.set(AUTH_CONFIG.SESSION_COOKIE, sessionToken, AUTH_CONFIG.COOKIE_OPTIONS)
 
-        // Redirect to main app
-        return redirect('/ca/')
+        // Redirect to main app with token in URL fragment (for cross-origin API calls)
+        // The client will extract this and store in localStorage
+        return redirect(`/ca/?token=${sessionToken}#auth`)
     } catch (error) {
         console.error('OAuth callback error:', error)
         return redirect('/ca/login?error=auth_failed')

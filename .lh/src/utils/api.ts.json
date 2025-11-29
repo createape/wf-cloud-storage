@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 4,
+            "activePatchIndex": 5,
             "patches": [
                 {
                     "date": 1763993647564,
@@ -24,6 +24,10 @@
                 {
                     "date": 1763997681679,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,10 @@\n-import { allowedOrigins as configAllowedOrigins } from \"../../astro.config.mjs\";\n-// export const allowedOrigins = ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787']\n \n // API Response utilities for consistent handling across endpoints\n export const API = {\n   // Allowed origins sourced from Astro config and cloned for mutation safety\n   // allowedOrigins: [...configAllowedOrigins],\n-  allowedOrigins: ['https://jscss.webflow.io', 'http://localhost:4321', 'http://localhost:8787'],\n+  allowedOrigins: [import.meta.env.ORIGIN, import.meta.env.ORIGIN_DEV, 'http://localhost:4321', 'http://localhost:8787'],\n \n   // CORS headers\n   corsHeaders: {\n     \"Access-Control-Allow-Methods\": \"GET, POST, PUT, DELETE, OPTIONS\",\n"
+                },
+                {
+                    "date": 1764457365954,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,12 +4,19 @@\n   // Allowed origins sourced from Astro config and cloned for mutation safety\n   // allowedOrigins: [...configAllowedOrigins],\n   allowedOrigins: [import.meta.env.ORIGIN, import.meta.env.ORIGIN_DEV, 'http://localhost:4321', 'http://localhost:8787'],\n \n+  // Allowed origin patterns for Webflow domains\n+  allowedOriginPatterns: [\n+    /^https:\\/\\/.*\\.webflow\\.io$/,\n+    /^https:\\/\\/.*\\.webflow\\.services$/,\n+  ],\n+\n   // CORS headers\n   corsHeaders: {\n     \"Access-Control-Allow-Methods\": \"GET, POST, PUT, DELETE, OPTIONS\",\n     \"Access-Control-Allow-Headers\": \"Content-Type, Authorization\",\n+    \"Access-Control-Allow-Credentials\": \"true\",\n     // \"Access-Control-Allow-Origin\": \"*\",\n   },\n \n   // Merge provided headers with CORS defaults and dynamic origin handling\n@@ -87,9 +94,14 @@\n   },\n \n   // Check if origin is allowed\n   isAllowedOrigin: (origin: string): boolean => {\n-    return API.allowedOrigins.includes(origin);\n+    // Check exact matches\n+    if (API.allowedOrigins.includes(origin)) {\n+      return true;\n+    }\n+    // Check pattern matches (Webflow domains)\n+    return API.allowedOriginPatterns.some(pattern => pattern.test(origin));\n   },\n \n   // Initialize API with base URL from environment\n   init: (baseUrl?: string) => {\n"
                 }
             ],
             "date": 1763993647564,
