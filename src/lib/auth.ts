@@ -34,6 +34,8 @@ export function createAuth(env: AuthEnv) {
             accountLinking: {
                 enabled: true,
             },
+            // Store account data in cookie for stateless mode
+            storeAccountCookie: true,
         },
     });
 }
