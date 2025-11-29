@@ -1,0 +1,18 @@
+{
+    "sourceFile": "wrangler.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764443174419,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764443174419,
+            "name": "Commit-0",
+            "content": "{\n  \"$schema\": \"node_modules/wrangler/config-schema.json\",\n  \"name\": \"astro\",\n  \"main\": \"./dist/_worker.js/index.js\",\n  \"compatibility_date\": \"2025-04-15\",\n  \"compatibility_flags\": [\"nodejs_compat\"],\n  \"vars\": {\n    \"GOOGLE_CLIENT_ID\": \"\"\n  },\n  \"assets\": {\n    \"binding\": \"ASSETS\",\n    \"directory\": \"./dist\"\n  },\n  \"observability\": {\n    \"enabled\": true\n  },\n  \"r2_buckets\": [\n    {\n      \"binding\": \"CLOUD_FILES\",\n      \"bucket_name\": \"cloud-files\"\n    }\n  ]\n}\n"
+        }
+    ]
+}

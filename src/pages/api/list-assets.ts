@@ -1,10 +1,17 @@
 import type { APIRoute } from "astro";
 import { API } from "../../utils/api";
+import { requireAuth } from "../../lib/auth-guard";
 
-export const GET: APIRoute = async ({ locals, request }) => {
+export const GET: APIRoute = async (context) => {
+  const { locals, request } = context;
+  
   try {
     // Set the origin for the API
     API.init((locals.runtime as any).env.ORIGIN);
+
+    // Auth check
+    const authError = await requireAuth(context);
+    if (authError) return authError;
 
     // Handle CORS preflight requests
     if (request.method === "OPTIONS") {

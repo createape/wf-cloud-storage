@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { API } from "../../utils/api";
+import { requireAuth } from "../../lib/auth-guard";
 
 interface MultipartUploadRequest {
   key: string;
@@ -26,9 +27,15 @@ async function parseRequestData(
 }
 
 // Creates and completes a new multipart upload session
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async (context) => {
+  const { request, locals } = context;
+  
   // Set the origin for the API
   API.init((locals.runtime as any).env.ORIGIN);
+
+  // Auth check
+  const authError = await requireAuth(context);
+  if (authError) return authError;
 
   // Handle CORS preflight requests
   if (request.method === "OPTIONS") {
@@ -139,9 +146,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
 };
 
 // Uploads individual parts of a multipart upload
-export const PUT: APIRoute = async ({ request, locals }) => {
+export const PUT: APIRoute = async (context) => {
+  const { request, locals } = context;
+  
   // Set the origin for the API
   API.init((locals.runtime as any).env.ORIGIN);
+
+  // Auth check
+  const authError = await requireAuth(context);
+  if (authError) return authError;
 
   // Handle CORS preflight requests
   if (request.method === "OPTIONS") {
@@ -209,9 +222,15 @@ export const PUT: APIRoute = async ({ request, locals }) => {
 };
 
 // Aborts a multipart upload
-export const DELETE: APIRoute = async ({ request, locals }) => {
+export const DELETE: APIRoute = async (context) => {
+  const { request, locals } = context;
+  
   // Set the origin for the API
   API.init((locals.runtime as any).env.ORIGIN);
+
+  // Auth check
+  const authError = await requireAuth(context);
+  if (authError) return authError;
 
   // Handle CORS preflight requests
   if (request.method === "OPTIONS") {
