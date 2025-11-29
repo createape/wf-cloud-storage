@@ -17,6 +17,7 @@ export function createAuth(env: AuthEnv) {
         baseURL: env.ORIGIN,
         basePath: "/ca/api/auth",
         secret: env.BETTER_AUTH_SECRET,
+        trustedOrigins: [env.ORIGIN],
         socialProviders: {
             google: {
                 clientId: env.GOOGLE_CLIENT_ID,

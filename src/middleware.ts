@@ -18,6 +18,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
     // Skip auth check if env is not available (build time)
     if (!env?.GOOGLE_CLIENT_ID || !env?.GOOGLE_CLIENT_SECRET) {
+        console.log("Skipping auth - missing env vars");
         return next();
     }
 
@@ -54,6 +55,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
         console.error("Middleware auth error:", error);
         (context.locals as any).user = null;
         (context.locals as any).session = null;
+        
+        // On auth error, redirect to login for pages (not API)
+        if (!pathname.startsWith("/ca/api/")) {
+            return context.redirect("/ca/login");
+        }
     }
 
     return next();
