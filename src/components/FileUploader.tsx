@@ -133,7 +133,7 @@ export default function FileUploader() {
   ) => {
     const BASE_CF_URL = `${import.meta.env.BASE_URL}/api/multipart-upload`
     const key = options.keyOverride || file.name
-    const CHUNK_SIZE = 5 * 1024 * 1024 // 5MB
+    const CHUNK_SIZE = 1 * 1024 * 1024 // 1MB chunks for Webflow Cloud compatibility
     const totalParts = Math.ceil(file.size / CHUNK_SIZE)
     const updateProgress = options.onProgress || (() => {})
 
