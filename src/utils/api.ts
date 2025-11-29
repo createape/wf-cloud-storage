@@ -5,10 +5,17 @@ export const API = {
   // allowedOrigins: [...configAllowedOrigins],
   allowedOrigins: [import.meta.env.ORIGIN, import.meta.env.ORIGIN_DEV, 'http://localhost:4321', 'http://localhost:8787'],
 
+  // Allowed origin patterns for Webflow domains
+  allowedOriginPatterns: [
+    /^https:\/\/.*\.webflow\.io$/,
+    /^https:\/\/.*\.webflow\.services$/,
+  ],
+
   // CORS headers
   corsHeaders: {
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Credentials": "true",
     // "Access-Control-Allow-Origin": "*",
   },
 
@@ -88,7 +95,12 @@ export const API = {
 
   // Check if origin is allowed
   isAllowedOrigin: (origin: string): boolean => {
-    return API.allowedOrigins.includes(origin);
+    // Check exact matches
+    if (API.allowedOrigins.includes(origin)) {
+      return true;
+    }
+    // Check pattern matches (Webflow domains)
+    return API.allowedOriginPatterns.some(pattern => pattern.test(origin));
   },
 
   // Initialize API with base URL from environment

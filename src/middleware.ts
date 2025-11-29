@@ -4,6 +4,12 @@ import { AUTH_CONFIG } from './lib/auth/config'
 
 export const onRequest = defineMiddleware(async (context, next) => {
     const { pathname } = context.url
+    const { request } = context
+
+    // Allow CORS preflight requests to pass through to endpoint handlers
+    if (request.method === 'OPTIONS') {
+        return next()
+    }
 
     // Define public routes that don't require authentication
     const publicRoutes = [
