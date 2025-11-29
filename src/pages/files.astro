@@ -73,7 +73,13 @@ import Layout from '../layouts/Layout.astro'
 </Layout>
 
 <script>
-  const baseUrl = import.meta.env.BASE_URL || '/ca'
+  // Get base path from current URL
+  const getBasePath = (): string => {
+    const path = window.location.pathname
+    const match = path.match(/^\/[^/]+/)
+    return match ? match[0] : '/ca'
+  }
+  const baseUrl = getBasePath()
 
   // DOM elements
   const uploadForm = document.getElementById('uploadForm') as HTMLFormElement
